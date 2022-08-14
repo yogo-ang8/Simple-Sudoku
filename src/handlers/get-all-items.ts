@@ -10,7 +10,7 @@ const docClient = new dynamodb.DocumentClient();
 /**
  * A simple example includes a HTTP get method to get all items from a DynamoDB table.
  */
-exports.getAllItemsHandler = async (event) => {
+exports.getAllItemsHandler = async (event: { httpMethod: string; path: any; }): Promise<any> => {
     if (event.httpMethod !== 'GET') {
         throw new Error(`getAllItems only accept GET method, you tried: ${event.httpMethod}`);
     }

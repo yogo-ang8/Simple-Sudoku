@@ -9,11 +9,16 @@
     "devDependencies": {
         "@types/jest": "^28.1.6",
         "chai": "^4.3.6",
-        "jest": "^26.6.3",
+        "mocha": "^10.0.0",
+        "sinon": "^14.0.0",
+        "ts-jest": "^28.0.7",
+        "ts-node": "^10.9.1",
         "typescript": "^4.7.4"
     },
     "scripts": {
         "compile": "tsc",
-        "test": "jest"
+        "unit": "mocha -r ts-node/register 'test/**/*.ts'",
+        "prune": "npm prune --omit=dev",
+        "test": "npm run compile && npm run unit"
     }
 }
