@@ -8,7 +8,7 @@ import sinon from "sinon";
 
 // This includes all tests for getAllItemsHandler()
 describe('Test getAllItemsHandler', () => {
-    let sinonSandbox;
+    let sinonSandbox:any;
     // Test one-time setup and teardown
     beforeEach((done) => {
         sinonSandbox = sinon.createSandbox();

@@ -4,11 +4,12 @@ module.exports = function (w) {
 
     return {
       files: [
-        'events/**/*.json',
-        'src/**/*.ts'
+        'events/*.json',
+        'src/**/*.ts',
+        'src/api/*.json'
       ],
       tests: [
-        'test/**/*spec.ts'
+        'test/unit/**/*.spec.ts'
       ],
       env:{
         type:'node'
