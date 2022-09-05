@@ -7,10 +7,11 @@ module.exports = function (w) {
       files: [
         'events/*.json',
         'src/**/*.ts',
+        'src/**/*.tsx',
         'src/api/*.json'
       ],
       tests: [
-        'test/unit/**/*.spec.ts'
+        'test/**/*.spec.ts'
       ],
       env:{
         type:'node'
