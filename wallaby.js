@@ -11,7 +11,7 @@ module.exports = function (w) {
         'src/api/*.json'
       ],
       tests: [
-        'test/**/*.spec.ts'
+        'test/**/*.test.ts'
       ],
       env:{
         type:'node'
