@@ -1,5 +1,6 @@
 import { Board } from '../src/models/iBoard';
 import sudokuIndexer from '../src/utils/sudokuIndexer';
+import { ICell } from '../src/models/iCell';
 var expect = require('chai').expect;
 describe("test board creation", () => {
     it("should create cells, rows, columns and blocks with init value", () => {
@@ -140,6 +141,113 @@ describe("test board creation", () => {
                 var expectedStr = target.printNumbers(expected);
                 expect(actualStr).equal(expectedStr);
             }
+        });
+    });
+
+    describe("test possibilities for cells", () => {
+        let sampleValues = [
+            5,8,0,6,0,9,2,0,0,
+            4,6,0,2,0,0,0,0,0,
+            1,0,0,7,8,0,0,3,6,
+            0,1,0,0,0,3,6,2,0,
+            0,2,0,8,7,0,0,0,0,
+            0,0,0,0,0,0,0,0,0,
+            0,0,6,0,0,0,0,7,0,
+            8,0,0,5,0,7,1,9,0,
+            9,0,0,0,0,8,0,0,4
+        ];
+
+        let target:Board;
+        beforeEach(function() {
+            target = new Board(sampleValues);
+        });
+
+        const expectedIndexByRow = (rowNum: number): Array<number> => {
+            var startIndex = rowNum * 9;
+            var list = new Array<number>;
+            for (let i = 0; i < 9; i++) {
+                list.push(sampleValues[startIndex + i]);
+            }
+            return list;
+        };
+        const expectedIndexByColumn = (columnNum: number): Array<number> => {
+            var list = new Array<number>;
+            for (let i = 0; i < 9; i++) {
+                list.push(sampleValues[9 * i + columnNum]);
+            }
+            return list;
+        };
+        const expectedIndexByBlockNum = (blockNum: number): Array<number> => {
+            var list = new Array<number>;
+            var blockColNum = blockNum % 3;
+            var blockRowNum = (blockNum - blockColNum) / 3;
+            let startRow = blockRowNum * 3;
+            let startCol = blockColNum * 3;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    let index = (startRow + i) * 9 + startCol + j;
+                    list.push(sampleValues[index]);
+                }
+            }
+            return list;
+        };
+
+        const expectCellIndex = (index: number, expectedRowNum: number, expectedColNum: number, expectedBlockNum: number): void => {
+            let rowCol = sudokuIndexer.rowColumnNumber(index);
+            expect(rowCol.rowNumber).equal(expectedRowNum);
+            expect(rowCol.columnNumber).equal(expectedColNum);
+            var blockNum = sudokuIndexer.blockNumber(rowCol);
+            expect(blockNum).equal(expectedBlockNum);
+            expect(target.cells[index].blockNumber).equal(blockNum);
+            expect(target.blocks[blockNum][(rowCol.rowNumber % 3) * 3 + rowCol.columnNumber % 3]).equal(index);
+        };
+
+        const getCellPossibilities=(cell:ICell)=>{
+            return cell.posibilities.filter(p=>p>0).map((p)=>p).join(",");
+        };
+
+        const verifyAndSetCellsValueWhichHasOnlyOnePossibility=(onlyOnePossibilityCells:Array<ICell>):void=>{
+            onlyOnePossibilityCells.forEach((c)=>{
+                expect(target.cells[c.id].posibilities.length).equal(1);
+                target.cells[c.id].value = target.cells[c.id].posibilities[0];
+            });
+        };
+        it("should set cell possibilities correctly",()=>{
+            target.refreshPossibilities();
+            let actual = getCellPossibilities(target.cells[0])
+            expect(actual).equal('');
+            actual = getCellPossibilities(target.cells[2]);
+            expect(actual).equal('3,7');
+            actual = getCellPossibilities(target.cells[4]);
+            expect(actual).equal('1,3,4');
+            actual = getCellPossibilities(target.cells[7]);
+            expect(actual).equal('1,4');
+            actual = getCellPossibilities(target.cells[8]);
+            expect(actual).equal('1,7');
+
+            actual = getCellPossibilities(target.cells[19]);
+            expect(actual).equal('9');
+            
+            actual = getCellPossibilities(target.cells[27]);
+            expect(actual).equal('7');
+        });
+
+
+        it("should set cell possibilities correctly after set cell with value of only one possibility",()=>{
+            target.refreshPossibilities();
+            var onlyOnePossibilityCells = target.cells.filter(c => c.posibilities.length == 1);//?
+            expect(onlyOnePossibilityCells.length).equal(2);
+            verifyAndSetCellsValueWhichHasOnlyOnePossibility(onlyOnePossibilityCells);
+
+            target.refreshPossibilities();
+            onlyOnePossibilityCells = target.cells.filter(c => c.posibilities.length == 1);//?
+            expect(onlyOnePossibilityCells.length).equal(1);
+            expect(onlyOnePossibilityCells[0].id).equal(20);
+            verifyAndSetCellsValueWhichHasOnlyOnePossibility(onlyOnePossibilityCells);
+
+            target.refreshPossibilities();
+            onlyOnePossibilityCells = target.cells.filter(c => c.posibilities.length == 1);//?
+            expect(onlyOnePossibilityCells.length).equal(0);
         });
     });
 });

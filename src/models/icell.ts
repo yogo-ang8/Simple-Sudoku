@@ -1,8 +1,8 @@
-import { IPosibility } from './iPosibility';
 import IRowColumnNumber from "./iRowColumnNumber";
 export interface ICell {
-    posibilities: Array<IPosibility>;
+    posibilities: Array<number>;
     value: number;
     blockNumber: number;
-    rowColumnNumber: IRowColumnNumber
+    rowColumnNumber: IRowColumnNumber;
+    id: number;
 }

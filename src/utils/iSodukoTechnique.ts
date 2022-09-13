@@ -12,5 +12,11 @@ export interface ISodukoTechnique {
 export interface IMatchInfo{
     status:boolean;
     cellIndex?:number;
-    value?:number;
+    value:number;
+}
+
+export class SudokuInputParser{
+    parse(txt:string):Array<number>{
+        
+    }
 }

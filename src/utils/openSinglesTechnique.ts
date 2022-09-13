@@ -4,7 +4,7 @@ import { ICell } from "../models/iCell";
 import { ISodukoTechnique, IMatchInfo } from "./iSodukoTechnique";
 
 export class OpenSingles implements ISodukoTechnique {
-    name: string = "OpenSingles";
+    name: string = "Open Singles";
     apply(board: IBoard): boolean {
         var matched: IMatchInfo;
         let i = 0;
